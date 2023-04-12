@@ -80,8 +80,8 @@ class TestView(TestCase):
         self.assertIn(self.post_002.category.name, post_002_card.text)
 
         post_003_card = main_area.find('div', id='post-3')
+        self.assertIn('미분류', post_003_card.text)
         self.assertIn(self.post_003.title, post_003_card.text)
-        self.assertIn(self.post_003.category.name, post_003_card.text)
 
         self.assertIn(self.user_trump.username.upper(), main_area.text)
         self.assertIn(self.user_obama.username.upper(), main_area.text)
@@ -90,8 +90,8 @@ class TestView(TestCase):
         Post.objects.all().delete()
         self.assertEqual(Post.objects.count(), 0)
         response = self.client.get('/blog/')
-        soup = BeautifulSoup(response.content, 'htm.parser')
-        main_area = soup.find('div', id='main=area')
+        soup = BeautifulSoup(response.content, 'html.parser')
+        main_area = soup.find('div', id='main-area')
         self.assertIn('아직 게시물이 없습니다', main_area.text)
 
     def test_post_detail(self):

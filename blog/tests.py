@@ -300,7 +300,7 @@ class TestView(TestCase):
 
         comment_form = comment_area.find('form', id='comment-form')
         self.assertTrue(comment_form.find('textarea', id='id_content'))
-        response = self.client.port(
+        response = self.client.post(
             self.post_001.get_absolute_url() + 'new_comment/',
             {
                 'content': "오바마의 댓글입니다.",

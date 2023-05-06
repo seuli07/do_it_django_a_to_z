@@ -4,6 +4,7 @@ from markdownx.models import MarkdownxField
 from markdownx.utils import markdown
 import os
 
+
 class Category(models.Model):
     name = models.CharField(max_length=50, unique=True)
     slug = models.SlugField(max_length=200, unique=True, allow_unicode=True)
@@ -17,6 +18,7 @@ class Category(models.Model):
     class Meta:
         verbose_name_plural = 'Categories'
 
+
 class Tag(models.Model):
     name = models.CharField(max_length=50, unique=True)
     slug = models.SlugField(max_length=200, unique=True, allow_unicode=True)
@@ -26,7 +28,6 @@ class Tag(models.Model):
 
     def get_absolute_url(self):
         return f'/blog/tag/{self.slug}/'
-
 
 
 class Post(models.Model):
@@ -61,6 +62,7 @@ class Post(models.Model):
     def get_content_markdown(self):
         return markdown(self.content)
 
+
 class Comment(models.Model):
     post = models.ForeignKey(Post, on_delete=models.CASCADE)
     author = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -74,3 +76,8 @@ class Comment(models.Model):
     def get_absolute_url(self):
         return f'{self.post.get_absolute_url()}#comment-{self.pk}'
 
+    def get_avatar_url(self):
+        if self.author.socialaccount_set.exists():
+            return self.author.socialaccount_set.first().get_avatar_url()
+        else:
+            return f'https://doitdjango.com/avatar/id/1522/7d8226065e1d5415/svg/{self.author.email}'
